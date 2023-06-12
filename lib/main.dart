@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:namer_app/pages/calendar.dart';
-import 'package:namer_app/pages/home.dart';
-import 'package:namer_app/pages/settings.dart';
-import 'package:namer_app/app_state.dart';
+import 'package:veo_eventos/pages/calendar.dart';
+import 'package:veo_eventos/pages/home.dart';
+import 'package:veo_eventos/pages/settings.dart';
+import 'package:veo_eventos/app_state.dart';
 
 void main() {
   runApp(MyApp());

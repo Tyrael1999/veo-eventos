@@ -1,4 +1,4 @@
-# namer_app
+# veo_eventos
 
 A new Flutter project.
 

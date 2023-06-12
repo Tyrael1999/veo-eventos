@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:namer_app/app_state.dart';
+import 'package:veo_eventos/app_state.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
