@@ -4,8 +4,14 @@ import 'package:veo_eventos/pages/calendar.dart';
 import 'package:veo_eventos/pages/home.dart';
 import 'package:veo_eventos/pages/settings.dart';
 import 'package:veo_eventos/app_state.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(MyApp());
 }
 
