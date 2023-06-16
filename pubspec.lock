@@ -118,6 +118,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_fast_forms:
+    dependency: "direct main"
+    description:
+      name: flutter_fast_forms
+      sha256: "381af1713da97f19b7246df83d8b3d8f9b8e1a672c647ba0cf2c2b8b15af4190"
+      url: "https://pub.dev"
+    source: hosted
+    version: "11.0.0"
   flutter_lints:
     dependency: "direct dev"
     description:
