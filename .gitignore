@@ -43,3 +43,10 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 /android/app/google-services.json
+
+# trash
+/veo_eventos/macos/Flutter/GeneratedPluginRegistrant.swift
+/veo_eventos/linux/flutter/generated_plugins.cmake
+/veo_eventos/linux/flutter/generated_plugin_registrant.cc
+/veo_eventos/windows/flutter/generated_plugin_registrant.cc
+/veo_eventos/windows/flutter/generated_plugins.cmake
