@@ -1,8 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:flutter_fast_forms/flutter_fast_forms.dart';
-import '../widgets/custom_fast_date_range_picker.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:intl/intl.dart';
 
 class CreateEventPage extends StatefulWidget {
   @override
@@ -10,16 +10,23 @@ class CreateEventPage extends StatefulWidget {
 }
 
 class _CreateEventPageState extends State<CreateEventPage> {
-  final formKey = GlobalKey<FormState>();
-  File? selectedImage;
+  final _formKey = GlobalKey<FormState>();
 
-  Future<void> pickImage() async {
-    final picker = ImagePicker();
-    final pickedImage = await picker.pickImage(source: ImageSource.gallery);
-    if (pickedImage != null) {
-      setState(() {
-        selectedImage = File(pickedImage.path);
-      });
+  final ImagePicker imgpicker = ImagePicker();
+  List<XFile>? imagefiles;
+
+  openImages() async {
+    try {
+      var pickedfiles = await imgpicker.pickMultiImage();
+      //you can use ImageCourse.camera for Camera capture
+      if (pickedfiles != null) {
+        imagefiles = pickedfiles;
+        setState(() {});
+      } else {
+        print("No image is selected.");
+      }
+    } catch (e) {
+      print("error while picking file.");
     }
   }
 
@@ -28,49 +35,58 @@ class _CreateEventPageState extends State<CreateEventPage> {
     return Column(
       children: [
         Text('Crear Evento'),
-        FastForm(
-          formKey: formKey,
-          children: [
-            FastTextField(
-              name: 'nombre_evento',
-              labelText: 'Nombre del evento',
-            ),
-            FastTextField(
-              name: 'nombre_organizacion',
-              labelText: 'Agrupación organizadora',
-            ),
-            FastTextField(
-              name: 'descripcion_evento',
-              labelText: 'Descripción',
-            ),
-            FastTextField(
-              name: 'ubicacion_evento',
-              labelText: 'Ubicación',
-            ),
-            CustomFastDateRangePicker(
-              name: 'hora_evento',
-              labelText: 'Inicio - Termino',
-              firstDate: DateTime.now(),
-              lastDate: DateTime.now().add(const Duration(days: 365)),
-              cancelText: 'Cancelar',
-              fieldStartLabelText: 'Fecha inicio',
-              fieldEndLabelText: 'Fecha termino',
-              helpText: 'Escoge el rango de fechas del evento',
-            ),
-          ],
-        ),
+        FormBuilder(
+            key: _formKey,
+            child: Column(
+              children: [
+                FormBuilderTextField(
+                  name: 'nombre_evento',
+                  decoration:
+                      const InputDecoration(labelText: 'Nombre del evento'),
+                ),
+                FormBuilderTextField(
+                  name: 'nombre_organizadora',
+                  decoration: const InputDecoration(
+                      labelText: 'Agrupación organizadora'),
+                ),
+                FormBuilderTextField(
+                  name: 'descripcion',
+                  decoration: const InputDecoration(labelText: 'Descripción'),
+                ),
+                FormBuilderTextField(
+                  name: 'ubicacion',
+                  decoration: const InputDecoration(labelText: 'Ubicacion'),
+                ),
+                FormBuilderDateTimePicker(
+                    name: 'date_established',
+                    format: DateFormat('dd/MM/yyyy'),
+                    enabled: true,
+                    decoration: InputDecoration(
+                      labelText: 'Fecha',
+                    )),
+              ],
+            )),
         Text('Agregar imagenes'),
         ElevatedButton.icon(
-          onPressed: pickImage,
+          onPressed: openImages,
           icon: Icon(Icons.upload),
           label: Text('Agregar'),
         ),
-        Container(
-          margin: EdgeInsets.only(top: 16.0),
-          child: selectedImage != null
-              ? Image.file(selectedImage!)
-              : Text('No se ha seleccionado una imagen'),
-        ),
+        Divider(),
+        Text('Imagenes seleccionadas'),
+        imagefiles != null
+            ? Wrap(
+                children: imagefiles!.map((imageone) {
+                  return Card(
+                    child: SizedBox(
+                      height: 100,
+                      width: 100,
+                      child: Image.file(File(imageone.path)),
+                    ),
+                  );
+                }).toList(),
+              )
+            : Container()
       ],
     );
   }

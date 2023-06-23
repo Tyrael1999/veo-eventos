@@ -65,37 +65,18 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButtonLocation: FloatingActionButtonLocation.miniEndTop,
-      floatingActionButton: SizedBox(
-        child: Row(
-          children: [
-            Visibility(
-              visible: selectedIndex == 0 ? true : false,
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(10, 60, 0, 0),
-                child: FloatingActionButton(
-                  shape: CircleBorder(),
-                  backgroundColor:
-                      Theme.of(context).colorScheme.secondaryContainer,
-                  onPressed: () => onButtonPressed(2),
-                  child: Icon(Icons.add),
-                ),
-              ),
-            ),
-            Visibility(
-              visible: selectedIndex == 2 ? true : false,
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(10, 60, 0, 0),
-                child: FloatingActionButton(
-                  shape: CircleBorder(),
-                  backgroundColor:
-                      Theme.of(context).colorScheme.secondaryContainer,
-                  onPressed: () {},
-                  child: Icon(Icons.save),
-                ),
-              ),
-            ),
-          ],
+      floatingActionButtonLocation: selectedIndex == 0
+          ? FloatingActionButtonLocation.miniEndTop
+          : FloatingActionButtonLocation.miniEndFloat,
+      floatingActionButton: Visibility(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(10, 60, 20, 60),
+          child: FloatingActionButton(
+            shape: CircleBorder(),
+            backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
+            onPressed: () => selectedIndex == 0 ? onButtonPressed(2) : {},
+            child: Icon(selectedIndex == 0 ? Icons.add : Icons.save),
+          ),
         ),
       ),
       backgroundColor: Theme.of(context).colorScheme.primaryContainer,
@@ -129,7 +110,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: Icon(Icons.home),
                   ),
                   ElevatedButton(
-                    onPressed: () => onButtonPressed(2),
+                    onPressed: () => {},
                     child: Icon(Icons.settings),
                   ),
                 ],
