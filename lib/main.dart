@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:veo_eventos/pages/calendar.dart';
 import 'package:veo_eventos/pages/home.dart';
-import 'package:veo_eventos/pages/settings.dart';
+import 'package:veo_eventos/pages/create_event.dart';
 import 'package:veo_eventos/app_state.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -49,14 +49,14 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  Widget getPage(BuildContext context) {
+  Widget getPage() {
     switch (selectedIndex) {
       case 0:
         return CalendarPage();
       case 1:
         return HomePage();
       case 2:
-        return SettingsPage();
+        return CreateEventPage();
       default:
         throw UnimplementedError('No widget for $selectedIndex');
     }
@@ -65,6 +65,40 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButtonLocation: FloatingActionButtonLocation.miniEndTop,
+      floatingActionButton: SizedBox(
+        child: Row(
+          children: [
+            Visibility(
+              visible: selectedIndex == 0 ? true : false,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(10, 60, 0, 0),
+                child: FloatingActionButton(
+                  shape: CircleBorder(),
+                  backgroundColor:
+                      Theme.of(context).colorScheme.secondaryContainer,
+                  onPressed: () => onButtonPressed(2),
+                  child: Icon(Icons.add),
+                ),
+              ),
+            ),
+            Visibility(
+              visible: selectedIndex == 2 ? true : false,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(10, 60, 0, 0),
+                child: FloatingActionButton(
+                  shape: CircleBorder(),
+                  backgroundColor:
+                      Theme.of(context).colorScheme.secondaryContainer,
+                  onPressed: () {},
+                  child: Icon(Icons.save),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+      backgroundColor: Theme.of(context).colorScheme.primaryContainer,
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Center(child: Text('VEO Eventos')),
@@ -73,9 +107,10 @@ class _MyHomePageState extends State<MyHomePage> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Expanded(
-            child: Container(
-              color: Theme.of(context).colorScheme.primaryContainer,
-              child: getPage(context),
+            child: SingleChildScrollView(
+              child: Container(
+                child: getPage(),
+              ),
             ),
           ),
           Container(

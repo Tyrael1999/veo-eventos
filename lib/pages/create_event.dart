@@ -4,12 +4,12 @@ import 'package:image_picker/image_picker.dart';
 import 'package:flutter_fast_forms/flutter_fast_forms.dart';
 import '../widgets/custom_fast_date_range_picker.dart';
 
-class SettingsPage extends StatefulWidget {
+class CreateEventPage extends StatefulWidget {
   @override
-  State<SettingsPage> createState() => _SettingsPageState();
+  State<CreateEventPage> createState() => _CreateEventPageState();
 }
 
-class _SettingsPageState extends State<SettingsPage> {
+class _CreateEventPageState extends State<CreateEventPage> {
   final formKey = GlobalKey<FormState>();
   File? selectedImage;
 
