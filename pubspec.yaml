@@ -20,6 +20,8 @@ dependencies:
   intl: ^0.18.1
   flutter_form_builder: ^9.0.0
   image_picker: ^0.8.4+4
+  geolocator: ^9.0.2
+  permission_handler: ^10.3.0
 
 dev_dependencies:
   flutter_test:

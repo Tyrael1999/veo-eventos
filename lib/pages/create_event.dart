@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:intl/intl.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class CreateEventPage extends StatefulWidget {
   @override
@@ -11,7 +13,7 @@ class CreateEventPage extends StatefulWidget {
 
 class _CreateEventPageState extends State<CreateEventPage> {
   final _formKey = GlobalKey<FormState>();
-
+  Position? _currentPosition;
   final ImagePicker imgpicker = ImagePicker();
   List<XFile>? imagefiles;
 
@@ -28,6 +30,36 @@ class _CreateEventPageState extends State<CreateEventPage> {
     } catch (e) {
       print("error while picking file.");
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    requestLocationPermission();
+  }
+
+  void requestLocationPermission() async {
+    PermissionStatus status = await Permission.location.request();
+    if (status.isGranted) {
+      // Los permisos de ubicación han sido concedidos
+      // Puedes usar Geolocator.getCurrentPosition() aquí
+    } else {
+      // Los permisos de ubicación no han sido concedidos
+      // Puedes mostrar un mensaje o realizar alguna otra acción
+    }
+  }
+
+  _getCurrentLocation() {
+    Geolocator.getCurrentPosition(
+            desiredAccuracy: LocationAccuracy.best,
+            forceAndroidLocationManager: true)
+        .then((Position position) {
+      setState(() {
+        _currentPosition = position;
+      });
+    }).catchError((e) {
+      print(e);
+    });
   }
 
   @override
@@ -53,10 +85,14 @@ class _CreateEventPageState extends State<CreateEventPage> {
                   name: 'descripcion',
                   decoration: const InputDecoration(labelText: 'Descripción'),
                 ),
-                FormBuilderTextField(
-                  name: 'ubicacion',
-                  decoration: const InputDecoration(labelText: 'Ubicacion'),
+                ElevatedButton.icon(
+                  onPressed: _getCurrentLocation,
+                  icon: Icon(Icons.location_on),
+                  label: Text(''),
                 ),
+                if (_currentPosition != null)
+                  Text(
+                      "LAT: ${_currentPosition?.latitude}, LNG: ${_currentPosition?.longitude}"),
                 FormBuilderDateTimePicker(
                     name: 'date_established',
                     format: DateFormat('dd/MM/yyyy'),
