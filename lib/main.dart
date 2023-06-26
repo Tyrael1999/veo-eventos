@@ -13,7 +13,8 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  initializeDateFormatting().then((_) => runApp(MyApp()));
+  await initializeDateFormatting();
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
