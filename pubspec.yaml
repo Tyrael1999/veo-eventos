@@ -20,6 +20,7 @@ dependencies:
   intl: ^0.18.1
   flutter_fast_forms: ^11.0.0
   image_picker: ^0.8.9
+  swipe_cards: ^0.0.1
 
 dev_dependencies:
   flutter_test:
