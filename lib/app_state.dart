@@ -23,7 +23,9 @@ class MyAppState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void createEvent(Event newEvent) {
+  void createEvent(name, group, description, position, startDate, termDate) {
+    Event newEvent =
+        Event(name, group, description, position, startDate, termDate);
     FirestoreService.firestore.collection("events").add(newEvent.toJson()).then(
         (DocumentReference doc) =>
             print('DocumentSnapshot added with ID: ${doc.id}'));
@@ -43,10 +45,9 @@ class Event {
   late String name, group, description;
   late String position;
   late String startDate, termDate;
-  late List<String> imagesURL;
 
   Event(this.name, this.group, this.description, this.position, this.startDate,
-      this.termDate, this.imagesURL);
+      this.termDate);
 
   Map<String, dynamic> toJson() {
     return {
@@ -56,7 +57,6 @@ class Event {
       'position': position,
       'startDate': startDate,
       'termDate': termDate,
-      'imagesURL': imagesURL,
     };
   }
 }

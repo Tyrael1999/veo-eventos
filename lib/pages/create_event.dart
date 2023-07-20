@@ -6,15 +6,18 @@ import 'package:intl/intl.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:provider/provider.dart';
+import 'package:veo_eventos/app_state.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class CreateEventPage extends StatefulWidget {
+  const CreateEventPage({super.key});
   @override
   State<CreateEventPage> createState() => _CreateEventPageState();
 }
 
 class _CreateEventPageState extends State<CreateEventPage> {
-  final _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormBuilderState>();
   Position? _currentPosition;
   String? _currentAddress;
   final ImagePicker imgpicker = ImagePicker();
@@ -39,7 +42,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
   @override
   void initState() {
     super.initState();
-    requestLocationPermission();
+    requestLocationPermission(); // Agrega esta línea para inicializar _formKey
   }
 
   void requestLocationPermission() async {
@@ -113,17 +116,44 @@ class _CreateEventPageState extends State<CreateEventPage> {
           setState(() {
             _currentAddress = formattedAddress;
           });
+        } else {
+          // Handle case when placemarks list is empty or null
+          setState(() {
+            _currentAddress = "No se pudo obtener la dirección.";
+          });
         }
 
         _ubicacionController.text = _currentAddress ?? '';
       } catch (e) {
         print(e);
+        // Handle any errors that occurred during the geocoding process
+        setState(() {
+          _currentAddress = "Error al obtener la dirección.";
+        });
       }
+    } else {
+      // Handle case when _currentPosition is null
+      setState(() {
+        _currentAddress = "Ubicación desconocida.";
+      });
     }
   }
 
   @override
+  void dispose() {
+    _ubicacionController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    var appState = context.watch<MyAppState>();
+    String nombreEvento = "",
+        nombreOrganizadora = "",
+        descripcion = "",
+        ubicacion = "",
+        fechaInicio = "",
+        fechaTermino = "";
     return Column(
       children: [
         Text('Crear Evento'),
@@ -132,42 +162,92 @@ class _CreateEventPageState extends State<CreateEventPage> {
             child: Column(
               children: [
                 FormBuilderTextField(
-                  name: 'nombre_evento',
-                  decoration:
-                      const InputDecoration(labelText: 'Nombre del evento'),
-                ),
+                    onSaved: (value) {
+                      nombreEvento = value!;
+                    },
+                    name: 'nombre_evento',
+                    decoration:
+                        const InputDecoration(labelText: 'Nombre del evento'),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Error';
+                      }
+                      return null;
+                    }),
                 FormBuilderTextField(
-                  name: 'nombre_organizadora',
-                  decoration: const InputDecoration(
-                      labelText: 'Agrupación organizadora'),
-                ),
+                    onSaved: (value) {
+                      nombreOrganizadora = value!;
+                    },
+                    name: 'nombre_organizadora',
+                    decoration: const InputDecoration(
+                        labelText: 'Agrupación organizadora'),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Please Enter 6 digit PIN';
+                      }
+                      return null;
+                    }),
                 FormBuilderTextField(
-                  name: 'descripcion',
-                  decoration: const InputDecoration(labelText: 'Descripción'),
-                ),
+                    onSaved: (value) {
+                      descripcion = value!;
+                    },
+                    name: 'descripcion',
+                    decoration: const InputDecoration(labelText: 'Descripción'),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Please Enter 6 digit PIN';
+                      }
+                      return null;
+                    }),
                 FormBuilderTextField(
-                  name: 'ubicacion',
-                  onTap: () {
-                    _determinePosition();
-                  },
-                  controller: _ubicacionController,
-                  readOnly: true,
-                  decoration: InputDecoration(
-                      labelText: 'Ubicación',
-                      suffixIcon: Icon(Icons.location_on)),
-                ),
+                    onSaved: (value) {
+                      ubicacion = value!;
+                    },
+                    name: 'ubicacion',
+                    onTap: () {
+                      _determinePosition();
+                    },
+                    controller: _ubicacionController,
+                    readOnly: true,
+                    decoration: InputDecoration(
+                        labelText: 'Ubicación',
+                        suffixIcon: Icon(Icons.location_on)),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Please Enter 6 digit PIN';
+                      }
+                      return null;
+                    }),
                 FormBuilderDateTimePicker(
+                    onSaved: (value) {
+                      fechaInicio = value.toString();
+                    },
                     name: 'fecha_inicio',
                     format: DateFormat('dd/MM/yyyy HH:mm'),
                     decoration: InputDecoration(
                       labelText: 'Fecha inicio',
-                    )),
+                    ),
+                    validator: (value) {
+                      if (value.toString().isEmpty) {
+                        return 'Please Enter 6 digit PIN';
+                      }
+                      return null;
+                    }),
                 FormBuilderDateTimePicker(
+                    onSaved: (value) {
+                      fechaTermino = value.toString();
+                    },
                     name: 'fecha_termino',
                     format: DateFormat('dd/MM/yyyy HH:mm'),
                     decoration: InputDecoration(
                       labelText: 'Fecha termino (opcional)',
-                    )),
+                    ),
+                    validator: (value) {
+                      if (value.toString().isEmpty) {
+                        return 'Please Enter 6 digit PIN';
+                      }
+                      return null;
+                    }),
               ],
             )),
         Text('Agregar imagenes'),
@@ -178,7 +258,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
         ),
         Divider(),
         Text('Imagenes seleccionadas'),
-        imagefiles != null
+        (imagefiles != null && imagefiles!.isNotEmpty
             ? Wrap(
                 children: imagefiles!.map((imageone) {
                   return Card(
@@ -190,7 +270,20 @@ class _CreateEventPageState extends State<CreateEventPage> {
                   );
                 }).toList(),
               )
-            : Container()
+            : Container()),
+        ElevatedButton.icon(
+          onPressed: () {
+            var temp = _formKey.currentState;
+            debugPrint('$temp');
+            if (_formKey.currentState!.validate()) {
+              _formKey.currentState?.save();
+              appState.createEvent(nombreEvento, nombreOrganizadora,
+                  descripcion, ubicacion, fechaInicio, fechaTermino);
+            }
+          },
+          icon: Icon(Icons.save),
+          label: Text('Guardar'),
+        ),
       ],
     );
   }
