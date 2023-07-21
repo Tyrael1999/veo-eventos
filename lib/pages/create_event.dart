@@ -178,8 +178,8 @@ class _CreateEventPageState extends State<CreateEventPage> {
                     decoration:
                         const InputDecoration(labelText: 'Nombre del evento'),
                     validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Error';
+                      if (value == null || value.isEmpty) {
+                        return 'Debe incluir nombre del evento';
                       }
                       return null;
                     }),
@@ -191,8 +191,8 @@ class _CreateEventPageState extends State<CreateEventPage> {
                     decoration: const InputDecoration(
                         labelText: 'Agrupación organizadora'),
                     validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Please Enter 6 digit PIN';
+                      if (value == null || value.isEmpty) {
+                        return 'Debe incluir nombre de organizadora';
                       }
                       return null;
                     }),
@@ -203,8 +203,8 @@ class _CreateEventPageState extends State<CreateEventPage> {
                     name: 'descripcion',
                     decoration: const InputDecoration(labelText: 'Descripción'),
                     validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Please Enter 6 digit PIN';
+                      if (value == null || value.isEmpty) {
+                        return 'Debe incluir una descripcion';
                       }
                       return null;
                     }),
@@ -222,8 +222,8 @@ class _CreateEventPageState extends State<CreateEventPage> {
                         labelText: 'Ubicación',
                         suffixIcon: Icon(Icons.location_on)),
                     validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Please Enter 6 digit PIN';
+                      if (value == null || value.isEmpty) {
+                        return 'Debe incluir una ubicacion';
                       }
                       return null;
                     }),
@@ -237,8 +237,8 @@ class _CreateEventPageState extends State<CreateEventPage> {
                       labelText: 'Fecha inicio',
                     ),
                     validator: (value) {
-                      if (value.toString().isEmpty) {
-                        return 'Please Enter 6 digit PIN';
+                      if (value == null || value.toString().isEmpty) {
+                        return 'Debe incluir una fecha de inicio';
                       }
                       return null;
                     }),
@@ -249,11 +249,11 @@ class _CreateEventPageState extends State<CreateEventPage> {
                     name: 'fecha_termino',
                     format: DateFormat('dd/MM/yyyy HH:mm'),
                     decoration: InputDecoration(
-                      labelText: 'Fecha termino (opcional)',
+                      labelText: 'Fecha termino',
                     ),
                     validator: (value) {
-                      if (value.toString().isEmpty) {
-                        return 'Please Enter 6 digit PIN';
+                      if (value == null || value.toString().isEmpty) {
+                        return 'Debe incluir una fecha de termino';
                       }
                       return null;
                     }),
@@ -294,12 +294,19 @@ class _CreateEventPageState extends State<CreateEventPage> {
             : Container()),
         ElevatedButton.icon(
           onPressed: () {
-            var temp = _formKey.currentState;
-            debugPrint('$temp');
             if (_formKey.currentState!.validate()) {
               _formKey.currentState?.save();
               appState.createEvent(nombreEvento, nombreOrganizadora,
                   descripcion, ubicacion, fechaInicio, fechaTermino);
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Guardando evento')),
+              );
+              _formKey.currentState
+                  ?.reset(); // Agregamos esta línea para limpiar el formulario
+              // También puedes restablecer las imágenes seleccionadas
+              setState(() {
+                imagefiles = null;
+              });
             }
           },
           icon: Icon(Icons.save),
