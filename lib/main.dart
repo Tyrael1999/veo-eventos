@@ -66,17 +66,18 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButtonLocation: selectedIndex == 0
-          ? FloatingActionButtonLocation.miniEndTop
-          : FloatingActionButtonLocation.miniEndFloat,
+      floatingActionButtonLocation: FloatingActionButtonLocation.miniEndTop,
       floatingActionButton: Visibility(
+        visible: selectedIndex == 0,
         child: Padding(
           padding: const EdgeInsets.fromLTRB(10, 60, 20, 60),
           child: FloatingActionButton(
             shape: CircleBorder(),
             backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
-            onPressed: () => selectedIndex == 0 ? onButtonPressed(2) : {},
-            child: Icon(selectedIndex == 0 ? Icons.add : Icons.save),
+            onPressed: () {
+              onButtonPressed(2);
+            },
+            child: Icon(Icons.add),
           ),
         ),
       ),
