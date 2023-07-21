@@ -9,13 +9,6 @@ class HomePage extends StatelessWidget {
     var appState = context.watch<MyAppState>();
     var pair = appState.current;
 
-    IconData icon;
-    if (appState.favorites.contains(pair)) {
-      icon = Icons.favorite;
-    } else {
-      icon = Icons.favorite_border;
-    }
-
     List<Color> cardColors = [
       Colors.red,
       Colors.blue,
@@ -63,15 +56,13 @@ class HomePage extends StatelessWidget {
                 onPressed: () {
                   appState.toggleFavorite();
                 },
-                icon: Icon(icon),
+                icon: Icon(Icons.favorite_border),
                 label: Text('Like'),
               ),
-              SizedBox(width: 10),
-              ElevatedButton(
-                onPressed: () {
-                  appState.getNext();
-                },
-                child: Text('Next'),
+              ElevatedButton.icon(
+                onPressed: () {},
+                icon: Icon(Icons.disabled_by_default_outlined),
+                label: Text('Dislike'),
               ),
             ],
           ),
