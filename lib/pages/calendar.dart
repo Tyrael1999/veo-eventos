@@ -19,8 +19,7 @@ class _CalendarPageState extends State<CalendarPage> {
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
     appState.getEvents();
-    return SingleChildScrollView(
-        child: Column(
+    return Column(
       children: [
         TableCalendar(
           focusedDay: _focusedDay,
@@ -37,42 +36,36 @@ class _CalendarPageState extends State<CalendarPage> {
             setState(() {
               _selectedDay = selectedDay;
               _focusedDay = focusedDay;
-              DateTime dateTime = DateFormat("yyyy-MM-dd HH:mm:ss.SSSZ")
-                  .parse(selectedDay.toString());
               _eventsForDay = _getEventsForDay(selectedDay, appState.events);
-              var lmao = appState.events;
-              print('$_eventsForDay');
-              print('$lmao');
             });
           },
         ),
-        SingleChildScrollView(
-          child: ListView.builder(
-            shrinkWrap: true,
-            itemCount: _eventsForDay.length,
-            itemBuilder: (context, index) {
-              final event = _eventsForDay[index];
-              return Card(
-                elevation: 2,
-                margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                child: ListTile(
-                  title: Text('${event.name} de ${event.group}'),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Ubicación: ${event.position}'),
-                      Text('Descripción: ${event.description}'),
-                      // Agregar más información si es necesario
-                    ],
-                  ),
-                  // Agregar cualquier otra información del evento que desees mostrar
+        ListView.builder(
+          shrinkWrap: true,
+          itemCount: _eventsForDay.length,
+          physics: NeverScrollableScrollPhysics(),
+          itemBuilder: (context, index) {
+            final event = _eventsForDay[index];
+            return Card(
+              elevation: 2,
+              margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+              child: ListTile(
+                title: Text('${event.name} de ${event.group}'),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Ubicación: ${event.position}'),
+                    Text('Descripción: ${event.description}'),
+                    // Agregar más información si es necesario
+                  ],
                 ),
-              );
-            },
-          ),
+                // Agregar cualquier otra información del evento que desees mostrar
+              ),
+            );
+          },
         ),
       ],
-    ));
+    );
   }
 
   List<Event> _getEventsForDay(DateTime day, List<Event> eventsData) {
