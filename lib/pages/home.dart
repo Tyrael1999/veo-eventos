@@ -21,7 +21,7 @@ class HomePage extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SizedBox(height: 10),
+          SizedBox(height: 50),
           CarouselSlider.builder(
             itemCount: cardColors.length,
             itemBuilder: (BuildContext context, int index, int realIndex) {
@@ -40,29 +40,40 @@ class HomePage extends StatelessWidget {
               );
             },
             options: CarouselOptions(
-              height: 200, // Altura del swiper
+              height: 550, // Altura del swiper
               enlargeCenterPage: true,
               enableInfiniteScroll: false,
               initialPage: 0,
               viewportFraction:
-                  0.6, // Tamaño de la tarjeta visible en la pantalla
+                  0.8, // Tamaño de la tarjeta visible en la pantalla
             ),
           ),
-          SizedBox(height: 10),
+          SizedBox(height: 40),
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              ElevatedButton.icon(
-                onPressed: () {
-                  appState.toggleFavorite();
-                },
-                icon: Icon(Icons.favorite_border),
-                label: Text('Like'),
+              SizedBox(
+                width: 150, // Ajusta el ancho del botón 'Like'
+                height: 55, // Ajusta la altura del botón 'Like'
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    appState.toggleFavorite();
+                  },
+                  icon: Icon(Icons.favorite_border),
+                  label: Text('Like'),
+                ),
               ),
-              ElevatedButton.icon(
-                onPressed: () {},
-                icon: Icon(Icons.disabled_by_default_outlined),
-                label: Text('Dislike'),
+              SizedBox(
+                  width:
+                      40), // Ajusta la separación horizontal entre los botones
+              SizedBox(
+                width: 150, // Ajusta el ancho del botón 'Dislike'
+                height: 55, // Ajusta la altura del botón 'Dislike'
+                child: ElevatedButton.icon(
+                  onPressed: () {},
+                  icon: Icon(Icons.disabled_by_default_outlined),
+                  label: Text('Dislike'),
+                ),
               ),
             ],
           ),
