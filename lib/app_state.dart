@@ -5,7 +5,7 @@ import 'package:veo_eventos/firestore_service.dart';
 
 class MyAppState extends ChangeNotifier {
   var current = WordPair.random();
-  late List<Map<String, dynamic>> events;
+  late List<Event> events = [];
 
   void getNext() {
     current = WordPair.random();
@@ -33,9 +33,17 @@ class MyAppState extends ChangeNotifier {
 
   void getEvents() async {
     await FirestoreService.firestore.collection("events").get().then((event) {
+      events = [];
       for (var doc in event.docs) {
-        events.add(doc.data());
-        print("${doc.id} => ${doc.data()}");
+        Event eventObj = Event(
+          doc.data()['name'],
+          doc.data()['group'],
+          doc.data()['description'],
+          doc.data()['position'],
+          doc.data()['startDate'],
+          doc.data()['termDate'],
+        );
+        events.add(eventObj);
       }
     });
   }
