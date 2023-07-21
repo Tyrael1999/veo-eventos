@@ -1,12 +1,12 @@
 name: veo_eventos
 description: A new Flutter project.
 
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 version: 0.0.1+1
 
 environment:
-  sdk: '>=2.19.4 <4.0.0'
+  sdk: ">=2.19.4 <4.0.0"
 
 dependencies:
   flutter:
@@ -24,6 +24,8 @@ dependencies:
   permission_handler: ^10.3.0
   geocoding: ^2.1.0
   url_launcher: ^6.1.11
+  flutter_card_swiper: ^6.0.0
+  carousel_slider: ^4.2.1
 
 dev_dependencies:
   flutter_test:
