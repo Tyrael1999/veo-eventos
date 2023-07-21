@@ -4,7 +4,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:intl/intl.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:provider/provider.dart';
 import 'package:veo_eventos/app_state.dart';
@@ -28,7 +27,10 @@ class _CreateEventPageState extends State<CreateEventPage> {
     try {
       var pickedfiles = await imgpicker.pickMultiImage();
       //you can use ImageCourse.camera for Camera capture
-      if (pickedfiles != null) {
+      if (imagefiles!.isNotEmpty) {
+        imagefiles?.addAll(pickedfiles);
+        setState(() {});
+      } else if (pickedfiles != null) {
         imagefiles = pickedfiles;
         setState(() {});
       } else {
@@ -39,21 +41,28 @@ class _CreateEventPageState extends State<CreateEventPage> {
     }
   }
 
+  takePhoto() async {
+    List<XFile>? images = [];
+    if (imagefiles!.isNotEmpty) {
+      images = imagefiles;
+    }
+    try {
+      var photo = await imgpicker.pickImage(source: ImageSource.camera);
+      if (photo != null) {
+        images?.add(photo);
+        imagefiles = images;
+        setState(() {});
+      } else {
+        print("No photo was taken.");
+      }
+    } catch (e) {
+      print("error while taking photo.");
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-    requestLocationPermission(); // Agrega esta línea para inicializar _formKey
-  }
-
-  void requestLocationPermission() async {
-    PermissionStatus status = await Permission.location.request();
-    if (status.isGranted) {
-      // Los permisos de ubicación han sido concedidos
-      // Puedes usar Geolocator.getCurrentPosition() aquí
-    } else {
-      // Los permisos de ubicación no han sido concedidos
-      // Puedes mostrar un mensaje o realizar alguna otra acción
-    }
   }
 
   Future<void> _determinePosition() async {
@@ -251,10 +260,22 @@ class _CreateEventPageState extends State<CreateEventPage> {
               ],
             )),
         Text('Agregar imagenes'),
-        ElevatedButton.icon(
-          onPressed: openImages,
-          icon: Icon(Icons.upload),
-          label: Text('Agregar'),
+        Center(
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ElevatedButton.icon(
+                onPressed: openImages,
+                icon: Icon(Icons.upload),
+                label: Text('Agregar'),
+              ),
+              ElevatedButton.icon(
+                onPressed: takePhoto,
+                icon: Icon(Icons.camera_alt),
+                label: Text('Subir foto'),
+              ),
+            ],
+          ),
         ),
         Divider(),
         Text('Imagenes seleccionadas'),
