@@ -7,14 +7,10 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
-    var pair = appState.current;
+    appState.getEvents();
 
     List<Color> cardColors = [
-      Colors.red,
-      Colors.blue,
       Colors.green,
-      Colors.yellow,
-      Colors.purple,
     ]; // Tu lista de colores para el swiper
 
     return Center(
@@ -23,18 +19,56 @@ class HomePage extends StatelessWidget {
         children: [
           SizedBox(height: 50),
           CarouselSlider.builder(
-            itemCount: cardColors.length,
+            itemCount: appState
+                .events.length, // Usamos la longitud de la lista de eventos
             itemBuilder: (BuildContext context, int index, int realIndex) {
+              var event = appState.events[
+                  index]; // Accedemos al evento actual desde la lista de eventos
+              // Analizamos la fecha original en un objeto DateTime
+              var originalDateTime = DateTime.parse(event.startDate);
+
+              // Formateamos la fecha en el formato deseado "dd/MM HH:mm"
+              var formattedDate =
+                  "${originalDateTime.day}/${originalDateTime.month.toString().padLeft(2, '0')} ${originalDateTime.hour.toString().padLeft(2, '0')}:${originalDateTime.minute.toString().padLeft(2, '0')}";
+
               return Container(
                 decoration: BoxDecoration(
-                  color: cardColors[
-                      index], // Usamos el color de la lista en función del índice
+                  color: cardColors[index %
+                      cardColors
+                          .length], // Usamos colores de la lista de cardColors de manera circular
                   borderRadius: BorderRadius.circular(16.0),
                 ),
                 child: Center(
-                  child: Text(
-                    'Tarjeta ${index + 1}',
-                    style: TextStyle(fontSize: 24, color: Colors.white),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        event.name, // Mostramos el nombre del evento
+                        style: TextStyle(fontSize: 30, color: Colors.white),
+                      ),
+                      SizedBox(
+                          height:
+                              5), // Espacio entre el nombre y la descripción
+                      Text(
+                        event.position, // Mostramos la descripción del evento
+                        style: TextStyle(fontSize: 16, color: Colors.white),
+                      ),
+                      SizedBox(
+                          height:
+                              5), // Espacio entre el nombre y la descripción
+                      Text(
+                        formattedDate, // Mostramos la descripción del evento
+                        style: TextStyle(fontSize: 16, color: Colors.white),
+                      ),
+                      SizedBox(
+                          height:
+                              10), // Espacio entre el nombre y la descripción
+                      Text(
+                        event
+                            .description, // Mostramos la descripción del evento
+                        style: TextStyle(fontSize: 20, color: Colors.white),
+                      ),
+                    ],
                   ),
                 ),
               );
