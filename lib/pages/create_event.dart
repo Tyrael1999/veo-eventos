@@ -20,7 +20,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
   Position? _currentPosition;
   String? _currentAddress;
   final ImagePicker imgpicker = ImagePicker();
-  List<XFile>? imagefiles;
+  List<XFile>? imagefiles = [];
   TextEditingController _ubicacionController = TextEditingController();
 
   openImages() async {
@@ -37,13 +37,13 @@ class _CreateEventPageState extends State<CreateEventPage> {
         print("No image is selected.");
       }
     } catch (e) {
-      print("error while picking file.");
+      print(e.toString());
     }
   }
 
   takePhoto() async {
     List<XFile>? images = [];
-    if (imagefiles!.isNotEmpty) {
+    if (imagefiles != null || imagefiles!.isEmpty) {
       images = imagefiles;
     }
     try {
